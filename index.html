@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Physical Audit 40/45/100 AH</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #1a73e8;
+      --blue-dark: #1557b0;
+      --blue-light: #e8f0fe;
+      --green: #1e8e3e;
+      --green-light: #e6f4ea;
+      --red: #d93025;
+      --red-light: #fce8e6;
+      --yellow: #f9ab00;
+      --yellow-light: #fef7e0;
+      --gray-1: #202124;
+      --gray-2: #5f6368;
+      --gray-3: #dadce0;
+      --gray-4: #f1f3f4;
+      --white: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f0f4ff;
+      min-height: 100vh;
+      padding: 16px;
+      padding-bottom: 40px;
+    }
+
+    .form-container {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(26,115,232,0.10);
+      overflow: hidden;
+    }
+
+    .form-header {
+      background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+      padding: 28px 24px 22px;
+      color: white;
+    }
+
+    .form-header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+
+    .form-header p {
+      font-size: 13px;
+      opacity: 0.82;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.5px;
+    }
+
+    .form-body {
+      padding: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    label.field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-2);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+    }
+
+    label.field-label .req { color: var(--red); }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid var(--gray-3);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--gray-1);
+      background: var(--white);
+      transition: border-color 0.18s, box-shadow 0.18s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input[type="text"]:focus, select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+    }
+
+    input[type="text"].error-field { border-color: var(--red); }
+
+    select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231a73e8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    /* Autocomplete */
+    .autocomplete-wrap { position: relative; }
+
+    .autocomplete-items {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: white;
+      border: 1.5px solid var(--gray-3);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      z-index: 100;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .autocomplete-items div {
+      padding: 12px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      border-bottom: 1px solid var(--gray-4);
+      transition: background 0.12s;
+    }
+
+    .autocomplete-items div:last-child { border-bottom: none; }
+    .autocomplete-items div:hover { background: var(--gray-4); }
+
+    .autocomplete-items .item-available { color: var(--green); font-weight: 500; }
+    .autocomplete-items .item-submitted { color: var(--red); font-style: italic; background: var(--red-light); }
+    .autocomplete-items .item-submitted:hover { background: #fad2cf; }
+    .autocomplete-items .item-na { color: var(--yellow); font-weight: 600; background: var(--yellow-light); }
+    .autocomplete-items .item-na:hover { background: #feefc3; }
+
+    /* Radio groups */
+    .radio-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .radio-card {
+      flex: 1;
+      position: relative;
+    }
+
+    .radio-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+
+    .radio-card label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px;
+      border: 1.5px solid var(--gray-3);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-2);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .radio-card input[type="radio"]:checked + label {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+
+    /* Messages */
+    .msg {
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-top: 8px;
+      display: none;
+      line-height: 1.4;
+    }
+    .msg.show { display: block; }
+    .msg-error { background: var(--red-light); color: var(--red); border-left: 3px solid var(--red); }
+    .msg-info { background: var(--blue-light); color: var(--blue); border-left: 3px solid var(--blue); }
+    .msg-success { background: var(--green-light); color: var(--green); border-left: 3px solid var(--green); }
+    .msg-warning { background: var(--yellow-light); color: #b45309; border-left: 3px solid var(--yellow); }
+
+    /* Hidden */
+    .hidden { display: none !important; }
+
+    /* Camera section */
+    .camera-section { margin-top: 0; }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 13px 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover:not(:disabled) { background: var(--blue-dark); }
+
+    .btn-secondary { background: var(--gray-4); color: var(--gray-1); }
+    .btn-secondary:hover:not(:disabled) { background: #e2e5ea; }
+
+    /* Image preview */
+    .image-preview {
+      position: relative;
+      margin-top: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1.5px solid var(--gray-3);
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .remove-img-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: rgba(217,48,37,0.9);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    /* Submit */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-top: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .submit-btn:hover:not(:disabled) { background: var(--blue-dark); box-shadow: 0 4px 12px rgba(26,115,232,0.3); }
+    .submit-btn:active:not(:disabled) { transform: scale(0.99); }
+    .submit-btn:disabled { background: var(--gray-3); color: var(--gray-2); cursor: not-allowed; }
+
+    /* Loading overlay */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.85);
+      z-index: 500;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .loading-overlay.show { display: flex; }
+
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid var(--gray-3);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loading-text { font-size: 15px; color: var(--gray-2); font-weight: 500; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Camera Modal */
+    .camera-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 1000;
+      flex-direction: column;
+    }
+    .camera-modal.active { display: flex; }
+
+    #cameraVideo {
+      flex: 1;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .camera-controls {
+      background: #111;
+      padding: 24px 20px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .capture-btn {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 4px solid white;
+      background: white;
+      cursor: pointer;
+      transition: transform 0.1s;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+    }
+
+    .capture-btn:active { transform: scale(0.92); }
+
+    .close-cam-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cam-hint {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    canvas { display: none; }
+
+    /* Success screen */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      text-align: center;
+      min-height: 300px;
+    }
+    .success-screen.show { display: flex; }
+
+    .success-icon {
+      width: 72px; height: 72px;
+      background: var(--green-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .success-screen h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gray-1);
+      margin-bottom: 10px;
+    }
+
+    .success-screen p {
+      font-size: 14px;
+      color: var(--gray-2);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .new-audit-btn {
+      padding: 12px 28px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+    }
+
+    /* Divider */
+    .section-divider {
+      height: 1px;
+      background: var(--gray-4);
+      margin: 4px 0 24px;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: var(--gray-2);
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    /* Init loading */
+    .init-loading {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--gray-2);
+      font-size: 15px;
+    }
+
+    .init-loading .spinner {
+      margin: 0 auto 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <div class="form-header">
+    <h1>Physical Audit</h1>
+    <p>40 / 45 / 100 AH BATTERIES</p>
+  </div>
+
+  <!-- Init loading -->
+  <div id="initLoading" class="init-loading">
+    <div class="spinner"></div>
+    Loading batteries...
+  </div>
+
+  <!-- Main Form -->
+  <div id="mainForm" class="form-body hidden">
+
+    <!-- 1. Auditor Name -->
+    <div class="form-group">
+      <label class="field-label">1. Auditor Name <span class="req">*</span></label>
+      <input type="text" id="auditorInput" placeholder="Enter your name" autocomplete="name">
+    </div>
+
+    <!-- 2. City -->
+    <div class="form-group">
+      <label class="field-label">2. City Name <span class="req">*</span></label>
+      <select id="citySelect">
+        <option value="">— Select City —</option>
+        <option value="Indore">Indore</option>
+        <option value="Ujjain">Ujjain</option>
+        <option value="Bhopal">Bhopal</option>
+        <option value="Gwalior">Gwalior</option>
+        <option value="Jaipur">Jaipur</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Guntur">Guntur</option>
+        <option value="Pune">Pune</option>
+        <option value="Mumbai">Mumbai</option>
+      </select>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- 3. Battery Serial Number -->
+    <div class="form-group">
+      <label class="field-label">3. Battery Serial Number <span class="req">*</span></label>
+      <div class="autocomplete-wrap">
+        <input type="text" id="batteryInput" placeholder="Type to search or select NA…" autocomplete="off">
+        <div id="autocompleteList" class="autocomplete-items" style="display:none;"></div>
+      </div>
+      <div id="batteryMsg" class="msg"></div>
+    </div>
+
+    <!-- 3a. New Battery ID -->
+    <div class="form-group hidden" id="newBatteryGroup">
+      <label class="field-label">3a. New Battery Serial Number <span class="req">*</span></label>
+      <input type="text" id="newBatteryInput" placeholder="Enter the new battery ID…">
+      <p class="help-text">This battery will be added to the system as a new entry</p>
+      <div id="newBatteryMsg" class="msg"></div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- 4. IOT -->
+    <div class="form-group">
+      <label class="field-label">4. Battery IOT <span class="req">*</span></label>
+      <div class="radio-group">
+        <div class="radio-card">
+          <input type="radio" id="iot_working" name="iot" value="Working">
+          <label for="iot_working">✅ Working</label>
+        </div>
+        <div class="radio-card">
+          <input type="radio" id="iot_notworking" name="iot" value="Not Working">
+          <label for="iot_notworking">❌ Not Working</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Top Cover -->
+    <div class="form-group">
+      <label class="field-label">5. Battery Top Cover Fitment <span class="req">*</span></label>
+      <div class="radio-group">
+        <div class="radio-card">
+          <input type="radio" id="cover_ok" name="cover" value="OK">
+          <label for="cover_ok">✅ OK</label>
+        </div>
+        <div class="radio-card">
+          <input type="radio" id="cover_notok" name="cover" value="Not OK">
+          <label for="cover_notok">❌ Not OK</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Handle -->
+    <div class="form-group">
+      <label class="field-label">6. Battery Handle <span class="req">*</span></label>
+      <div class="radio-group">
+        <div class="radio-card">
+          <input type="radio" id="handle_ok" name="handle" value="OK">
+          <label for="handle_ok">✅ OK</label>
+        </div>
+        <div class="radio-card">
+          <input type="radio" id="handle_notok" name="handle" value="Not OK">
+          <label for="handle_notok">❌ Not OK</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Cleanliness -->
+    <div class="form-group">
+      <label class="field-label">7. Overall Battery Cleanliness <span class="req">*</span></label>
+      <div class="radio-group">
+        <div class="radio-card">
+          <input type="radio" id="clean_ok" name="cleanliness" value="OK">
+          <label for="clean_ok">✅ OK</label>
+        </div>
+        <div class="radio-card">
+          <input type="radio" id="clean_notok" name="cleanliness" value="Not OK">
+          <label for="clean_notok">❌ Not OK</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- 8. Photo -->
+    <div class="form-group">
+      <label class="field-label">8. Battery Photo with Serial Number <span class="req">*</span></label>
+      <p class="help-text" style="margin-bottom:10px;">Battery Serial Number must be visible in the photo</p>
+      <div class="camera-section">
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="openCameraBtn">📷 Take Photo</button>
+          <button type="button" class="btn btn-secondary" id="retakeBtn" style="display:none;">🔄 Retake</button>
+        </div>
+        <div id="imagePreview" class="image-preview hidden"></div>
+        <div id="photoMsg" class="msg"></div>
+      </div>
+    </div>
+
+    <button type="button" class="submit-btn" id="submitBtn">Submit Audit</button>
+  </div>
+
+  <!-- Success Screen -->
+  <div id="successScreen" class="success-screen">
+    <div class="success-icon">✅</div>
+    <h2>Audit Submitted!</h2>
+    <p id="successText">Battery audit has been submitted successfully.</p>
+    <button class="new-audit-btn" id="newAuditBtn">Submit Another Audit</button>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Submitting audit…</div>
+</div>
+
+<!-- Camera Modal -->
+<div class="camera-modal" id="cameraModal">
+  <div class="cam-hint">📷 Point at battery serial number</div>
+  <video id="cameraVideo" autoplay playsinline muted></video>
+  <canvas id="canvas"></canvas>
+  <div class="camera-controls">
+    <button class="close-cam-btn" id="closeCamBtn">✕</button>
+    <button class="capture-btn" id="captureBtn"></button>
+    <div style="width:48px;"></div>
+  </div>
+</div>
+
+<script>
+  // ============ CONFIG ============
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyc-Dc31imS152yyTS1w2AWmigbDGxZhuRpu5ojARODIAwgOuL9bBOMfsv5iaO72EJ13w/exec';
+
+  // ============ STATE ============
+  let allBatteries = [];
+  let selectedBatteryID = '';
+  let isNewBattery = false;
+  let canSubmitBattery = false;
+  let imageBase64 = '';
+  let cameraStream = null;
+
+  // ============ ELEMENTS ============
+  const initLoading = document.getElementById('initLoading');
+  const mainForm = document.getElementById('mainForm');
+  const successScreen = document.getElementById('successScreen');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const loadingText = document.getElementById('loadingText');
+
+  const auditorInput = document.getElementById('auditorInput');
+  const citySelect = document.getElementById('citySelect');
+  const batteryInput = document.getElementById('batteryInput');
+  const autocompleteList = document.getElementById('autocompleteList');
+  const batteryMsg = document.getElementById('batteryMsg');
+  const newBatteryGroup = document.getElementById('newBatteryGroup');
+  const newBatteryInput = document.getElementById('newBatteryInput');
+  const newBatteryMsg = document.getElementById('newBatteryMsg');
+  const imagePreview = document.getElementById('imagePreview');
+  const photoMsg = document.getElementById('photoMsg');
+  const submitBtn = document.getElementById('submitBtn');
+
+  const cameraModal = document.getElementById('cameraModal');
+  const video = document.getElementById('cameraVideo');
+  const canvas = document.getElementById('canvas');
+
+  // ============ INIT ============
+  window.addEventListener('load', loadBatteries);
+
+  async function loadBatteries() {
+    try {
+      const res = await fetch(`${API_URL}?action=getBatteries`);
+      const json = await res.json();
+      if (json.success) {
+        allBatteries = json.data;
+      }
+    } catch (e) {
+      console.error('Failed to load batteries:', e);
+    } finally {
+      initLoading.classList.add('hidden');
+      mainForm.classList.remove('hidden');
+    }
+  }
+
+  // ============ AUTOCOMPLETE ============
+  batteryInput.addEventListener('input', function () {
+    const val = this.value.trim();
+    resetBatteryState();
+
+    if (!val) { hideAutocomplete(); return; }
+
+    const matches = allBatteries.filter(b =>
+      b.id.toLowerCase().includes(val.toLowerCase())
+    );
+
+    const items = [];
+
+    matches.forEach(b => {
+      const isSubmitted = b.status === 'Submitted';
+      const div = document.createElement('div');
+      div.innerHTML = isSubmitted
+        ? `<span class="item-submitted">🚫 ${b.id} — Already Submitted</span>`
+        : `<span class="item-available">✅ ${b.id} — Available</span>`;
+
+      div.addEventListener('click', () => selectBattery(b, isSubmitted));
+      items.push(div);
+    });
+
+    // NA option
+    const naDiv = document.createElement('div');
+    naDiv.innerHTML = `<span class="item-na">⚠️ NA — Battery not in list (enter manually)</span>`;
+    naDiv.addEventListener('click', selectNA);
+    items.push(naDiv);
+
+    autocompleteList.innerHTML = '';
+    items.forEach(i => autocompleteList.appendChild(i));
+    autocompleteList.style.display = 'block';
+  });
+
+  function selectBattery(battery, isSubmitted) {
+    batteryInput.value = battery.id;
+    selectedBatteryID = battery.id;
+    isNewBattery = false;
+    hideAutocomplete();
+    newBatteryGroup.classList.add('hidden');
+    newBatteryInput.value = '';
+
+    if (isSubmitted) {
+      canSubmitBattery = false;
+      batteryInput.classList.add('error-field');
+      showMsg(batteryMsg, '🚫 This battery was already submitted. Please select a different one.', 'error');
+    } else {
+      canSubmitBattery = true;
+      batteryInput.classList.remove('error-field');
+      showMsg(batteryMsg, '✅ Battery available for audit', 'success');
+    }
+  }
+
+  function selectNA() {
+    batteryInput.value = 'NA';
+    selectedBatteryID = 'NA';
+    isNewBattery = true;
+    canSubmitBattery = false;
+    hideAutocomplete();
+    batteryInput.classList.remove('error-field');
+    showMsg(batteryMsg, '⚠️ Please enter the new battery ID below', 'warning');
+    newBatteryGroup.classList.remove('hidden');
+    newBatteryInput.focus();
+  }
+
+  newBatteryInput.addEventListener('input', function () {
+    const newID = this.value.trim();
+    hideMsg(newBatteryMsg);
+    if (!newID) { canSubmitBattery = false; return; }
+
+    const exists = allBatteries.find(b => b.id.toLowerCase() === newID.toLowerCase());
+    if (exists) {
+      canSubmitBattery = false;
+      showMsg(newBatteryMsg, `🚫 Battery "${newID}" already exists (${exists.status}). Select from dropdown.`, 'error');
+    } else {
+      canSubmitBattery = true;
+      hideMsg(newBatteryMsg);
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!batteryInput.contains(e.target) && !autocompleteList.contains(e.target)) {
+      hideAutocomplete();
+    }
+  });
+
+  function resetBatteryState() {
+    selectedBatteryID = '';
+    isNewBattery = false;
+    canSubmitBattery = false;
+    batteryInput.classList.remove('error-field');
+    hideMsg(batteryMsg);
+    newBatteryGroup.classList.add('hidden');
+    newBatteryInput.value = '';
+    hideMsg(newBatteryMsg);
+  }
+
+  function hideAutocomplete() {
+    autocompleteList.style.display = 'none';
+    autocompleteList.innerHTML = '';
+  }
+
+  // ============ CAMERA ============
+  document.getElementById('openCameraBtn').addEventListener('click', openCamera);
+  document.getElementById('closeCamBtn').addEventListener('click', stopCamera);
+  document.getElementById('captureBtn').addEventListener('click', capturePhoto);
+  document.getElementById('retakeBtn').addEventListener('click', openCamera);
+
+  async function openCamera() {
+    hideMsg(photoMsg);
+    try {
+      if (cameraStream) stopCameraStream();
+
+      // Try back camera first, fallback to any
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+          audio: false
+        });
+      } catch {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      }
+
+      video.srcObject = cameraStream;
+      cameraModal.classList.add('active');
+    } catch (err) {
+      let msg = '❌ Cannot access camera. ';
+      if (err.name === 'NotAllowedError') {
+        msg += 'Permission denied. Please allow camera access in browser settings and refresh.';
+      } else if (err.name === 'NotFoundError') {
+        msg += 'No camera found on this device.';
+      } else if (err.name === 'NotReadableError') {
+        msg += 'Camera is busy. Close other apps using the camera.';
+      } else {
+        msg += err.message;
+      }
+      showMsg(photoMsg, msg, 'error');
+    }
+  }
+
+  function capturePhoto() {
+    if (!video.videoWidth) { alert('Camera not ready yet'); return; }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    imageBase64 = canvas.toDataURL('image/jpeg', 0.82);
+
+    imagePreview.innerHTML = `
+      <img src="${imageBase64}" alt="Battery photo">
+      <button class="remove-img-btn" onclick="removePhoto()">×</button>
+    `;
+    imagePreview.classList.remove('hidden');
+
+    document.getElementById('retakeBtn').style.display = 'flex';
+    document.getElementById('openCameraBtn').style.display = 'none';
+
+    hideMsg(photoMsg);
+    stopCamera();
+  }
+
+  function stopCamera() {
+    stopCameraStream();
+    cameraModal.classList.remove('active');
+  }
+
+  function stopCameraStream() {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(t => t.stop());
+      cameraStream = null;
+    }
+    video.srcObject = null;
+  }
+
+  window.removePhoto = function () {
+    imageBase64 = '';
+    imagePreview.innerHTML = '';
+    imagePreview.classList.add('hidden');
+    document.getElementById('retakeBtn').style.display = 'none';
+    document.getElementById('openCameraBtn').style.display = 'flex';
+  };
+
+  // ============ SUBMIT ============
+  submitBtn.addEventListener('click', async function () {
+    hideMsg(batteryMsg);
+    hideMsg(newBatteryMsg);
+    hideMsg(photoMsg);
+
+    // Validate
+    const auditor = auditorInput.value.trim();
+    const city = citySelect.value;
+
+    if (!auditor) { alert('Please enter Auditor Name'); auditorInput.focus(); return; }
+    if (!city) { alert('Please select a City'); citySelect.focus(); return; }
+
+    const iot = document.querySelector('input[name="iot"]:checked');
+    const cover = document.querySelector('input[name="cover"]:checked');
+    const handle = document.querySelector('input[name="handle"]:checked');
+    const cleanliness = document.querySelector('input[name="cleanliness"]:checked');
+
+    if (!iot) { alert('Please select IOT Status'); return; }
+    if (!cover) { alert('Please select Top Cover status'); return; }
+    if (!handle) { alert('Please select Handle status'); return; }
+    if (!cleanliness) { alert('Please select Cleanliness status'); return; }
+
+    let finalBatteryID = '';
+
+    if (isNewBattery) {
+      finalBatteryID = newBatteryInput.value.trim();
+      if (!finalBatteryID) {
+        showMsg(newBatteryMsg, '❌ Please enter the new battery ID', 'error');
+        newBatteryInput.focus();
+        return;
+      }
+      const exists = allBatteries.find(b => b.id.toLowerCase() === finalBatteryID.toLowerCase());
+      if (exists) {
+        showMsg(newBatteryMsg, `🚫 Battery "${finalBatteryID}" already exists. Select from dropdown.`, 'error');
+        return;
+      }
+    } else {
+      finalBatteryID = batteryInput.value.trim();
+      if (!finalBatteryID) {
+        showMsg(batteryMsg, '❌ Please select a battery from the list', 'error');
+        batteryInput.focus();
+        return;
+      }
+      if (!canSubmitBattery) {
+        showMsg(batteryMsg, '❌ Please select a valid available battery', 'error');
+        return;
+      }
+    }
+
+    if (!imageBase64) {
+      showMsg(photoMsg, '❌ Please take a photo of the battery', 'error');
+      return;
+    }
+
+    // Submit
+    const formData = {
+      auditor, city,
+      isNewBattery,
+      iot: iot.value,
+      cover: cover.value,
+      handle: handle.value,
+      cleanliness: cleanliness.value,
+      photo: imageBase64
+    };
+
+    showLoading('Uploading photo & submitting…');
+    submitBtn.disabled = true;
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'submitBattery', batteryID: finalBatteryID, formData })
+      });
+
+      const result = await res.json();
+      hideLoading();
+      submitBtn.disabled = false;
+
+      if (result.success) {
+        // Show success screen
+        document.getElementById('successText').textContent = result.message;
+        mainForm.classList.add('hidden');
+        successScreen.classList.add('show');
+
+        // Reload batteries list
+        loadBatteriesQuiet();
+      } else {
+        if (isNewBattery) {
+          showMsg(newBatteryMsg, result.message, 'error');
+        } else {
+          showMsg(batteryMsg, result.message, 'error');
+          batteryInput.classList.add('error-field');
+        }
+      }
+    } catch (err) {
+      hideLoading();
+      submitBtn.disabled = false;
+      alert('Network error. Please check your connection and try again.\n\n' + err.message);
+    }
+  });
+
+  // New audit button
+  document.getElementById('newAuditBtn').addEventListener('click', resetForm);
+
+  function resetForm() {
+    // Reset all fields
+    auditorInput.value = '';
+    citySelect.value = '';
+    batteryInput.value = '';
+    newBatteryInput.value = '';
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    removePhoto();
+    resetBatteryState();
+    hideMsg(photoMsg);
+
+    // Reset state
+    isNewBattery = false;
+    selectedBatteryID = '';
+    canSubmitBattery = false;
+    imageBase64 = '';
+
+    successScreen.classList.remove('show');
+    mainForm.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function loadBatteriesQuiet() {
+    try {
+      const res = await fetch(`${API_URL}?action=getBatteries`);
+      const json = await res.json();
+      if (json.success) allBatteries = json.data;
+    } catch (e) { /* silent */ }
+  }
+
+  // ============ HELPERS ============
+  function showMsg(el, text, type) {
+    el.textContent = text;
+    el.className = `msg msg-${type} show`;
+  }
+
+  function hideMsg(el) {
+    el.className = 'msg';
+    el.textContent = '';
+  }
+
+  function showLoading(text = 'Loading…') {
+    loadingText.textContent = text;
+    loadingOverlay.classList.add('show');
+  }
+
+  function hideLoading() {
+    loadingOverlay.classList.remove('show');
+  }
+</script>
+</body>
+</html>
